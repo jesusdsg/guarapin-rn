@@ -9,10 +9,11 @@ import {
   View,
 } from 'react-native';
 import {GET_CHARACTERS} from '../graphql/queries';
+import {Card} from '../components/Card';
 
 export const HomeScreen = () => {
   const {loading, error, data} = useQuery(GET_CHARACTERS, {
-    variables: {page: 1}, // Puedes cambiar la página
+    variables: {page: 1},
   });
 
   if (loading) return <ActivityIndicator size="large" color="#00ff00" />;
@@ -20,32 +21,33 @@ export const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={require('../assets/title.png')}
+        alt="Title"
+        style={styles.title}
+        resizeMode="contain"
+      />
       <FlatList
         data={data.characters.results}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <View style={styles.card}>
-            <Image source={{uri: item.image}} style={styles.image} />
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.species}>{item.species}</Text>
-          </View>
-        )}
+        renderItem={({item}) => <Card character={item} />}
       />
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 10, backgroundColor: '#f5f5f5'},
-  card: {
-    alignItems: 'center',
-    marginBottom: 20,
-    backgroundColor: 'white',
+  container: {
+    flex: 1,
     padding: 10,
-    borderRadius: 10,
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 20,
   },
-  image: {width: 150, height: 150, borderRadius: 10},
-  name: {fontSize: 18, fontWeight: 'bold', marginTop: 10},
-  species: {fontSize: 16, color: 'gray'},
+  title: {
+    width: 300,
+    height: 100,
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
 });
 
 export default HomeScreen;
