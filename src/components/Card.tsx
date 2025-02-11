@@ -15,7 +15,7 @@ interface CardProps {
 
 export const Card: React.FC<CardProps> = ({character}) => {
   return (
-    <Pressable style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image source={{uri: character.image}} style={styles.image} />
       </View>
@@ -23,7 +23,7 @@ export const Card: React.FC<CardProps> = ({character}) => {
         <Text style={styles.name}>{character.name}</Text>
         <Text style={styles.species}>{character.species}</Text>
       </View>
-    </Pressable>
+    </View>
   );
 };
 
