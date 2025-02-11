@@ -12,11 +12,17 @@ import {
 import {GET_CHARACTERS} from '../graphql/queries';
 import {Card} from '../components/Card';
 import {Button} from '../components/Button';
-import SearchIcon from '../components/icons/SearchIcon';
+import Icon from 'react-native-vector-icons/Ionicons';
+import DetailModal from '../components/DetailModal';
+import {Character} from '../types/Character';
 
 export const HomeScreen = () => {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+
+  const [selectedCharacter, setSelectedCharacter] = useState<Character>();
+  const [modalVisible, setModalVisible] = useState(false);
+
   const {loading, error, data, refetch, fetchMore} = useQuery(GET_CHARACTERS, {
     variables: {page: 1},
   });
@@ -60,6 +66,11 @@ export const HomeScreen = () => {
     refetch({name: text, page: 1});
   };
 
+  const handleSelectCharacter = (character: Character) => {
+    setSelectedCharacter(character);
+    setModalVisible(true);
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -81,12 +92,23 @@ export const HomeScreen = () => {
           onChangeText={handleSearch}
           value={search}
         />
+        <View style={{position: 'absolute', left: 10, top: 5}}>
+          <Icon name="search" size={30} color={'#d1d1d1'} />
+        </View>
       </View>
 
       <FlatList
         data={data.characters.results || []}
         keyExtractor={item => item.id}
-        renderItem={({item}) => <Card character={item} />}
+        renderItem={({item}) => (
+          <Card character={item} onPress={handleSelectCharacter} />
+        )}
+      />
+
+      <DetailModal
+        selectedCharacter={selectedCharacter}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
       />
 
       <Button title="Load more..." onPress={() => loadMore()} />
@@ -114,6 +136,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     color: '#000',
+    paddingLeft: 32,
   },
 });
 

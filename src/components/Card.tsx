@@ -1,21 +1,25 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {colors} from '../constants/colors';
-
-interface Character {
-  id: string | number;
-  image: string;
-  name: string;
-  species: string;
-}
+import {Character} from '../types/Character';
 
 interface CardProps {
   character: Character;
+  onPress: (character: Character) => void;
 }
 
-export const Card: React.FC<CardProps> = ({character}) => {
+export const Card: React.FC<CardProps> = ({character, onPress}) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => onPress(character)}>
       <View style={styles.imageContainer}>
         <Image source={{uri: character.image}} style={styles.image} />
       </View>
@@ -23,7 +27,7 @@ export const Card: React.FC<CardProps> = ({character}) => {
         <Text style={styles.name}>{character.name}</Text>
         <Text style={styles.species}>{character.species}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
